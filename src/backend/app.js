@@ -27,9 +27,10 @@ export async function createApp() {
   const app = express();
 
   // Security Middlewares
+  // Disable HSTS and upgrade-insecure-requests for HTTP-only deployment
   app.use(helmet({
     contentSecurityPolicy: {
-      useDefaults: true,
+      useDefaults: false,
       directives: {
         "default-src": ["'self'"],
         "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com"],
@@ -39,9 +40,12 @@ export async function createApp() {
         "child-src": ["'self'", "blob:"],
         "img-src": ["'self'", "data:", "blob:", "https:"],
         "style-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://fonts.googleapis.com"],
-        "font-src": ["'self'", "https://fonts.gstatic.com"],
+        "font-src": ["'self'", "https://fonts.gstatic.com", "data:"],
       },
     },
+    hsts: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: false,
   }));
   app.use(
     cors({
